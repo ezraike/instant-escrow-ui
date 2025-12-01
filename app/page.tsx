@@ -5,8 +5,8 @@ import { EscrowList } from '@/components/EscrowList';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Arc Instant Escrow - Emanet Yönetim Sistemi',
-  description: 'Arc Testnet üzerinde deterministik kesinlik ile güvenli emanet yönetimi',
+  title: 'Arc Instant Escrow - Secure Escrow Management',
+  description: 'Secure escrow management with deterministic finality on Arc Testnet',
 };
 
 export default function Home() {
@@ -21,7 +21,7 @@ export default function Home() {
                 🔐 Arc Instant Escrow
               </h1>
               <p className="text-gray-600 text-sm mt-1">
-                Deterministik Kesinlik ile Güvenli Emanet Yönetimi
+                Secure Escrow Management with Deterministic Finality
               </p>
             </div>
             <WalletButton />
@@ -34,23 +34,23 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="text-3xl mb-2">⚡</div>
-              <h3 className="font-semibold text-gray-900">Hızlı İşlem</h3>
+              <h3 className="font-semibold text-gray-900">Fast Transactions</h3>
               <p className="text-sm text-gray-600 mt-1">
-                Arc blockchain'in sub-saniye deterministic finality teknolojisi
+                Arc blockchain's sub-second deterministic finality technology
               </p>
             </div>
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="text-3xl mb-2">💰</div>
-              <h3 className="font-semibold text-gray-900">Düşük Ücret</h3>
+              <h3 className="font-semibold text-gray-900">Low Fees</h3>
               <p className="text-sm text-gray-600 mt-1">
-                USDC ile işlem ücreti öde (~0.01 USD)
+                Pay transaction fees with USDC (~0.01 USD)
               </p>
             </div>
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="text-3xl mb-2">🔒</div>
-              <h3 className="font-semibold text-gray-900">Güvenli</h3>
+              <h3 className="font-semibold text-gray-900">Secure</h3>
               <p className="text-sm text-gray-600 mt-1">
-                Akıllı sözleşme ile tam kontrol ve doğruluk
+                Full control and accuracy with smart contracts
               </p>
             </div>
           </div>
@@ -125,7 +125,7 @@ export default function Home() {
               </div>
             </div>
             <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-sm">
-              <p>© 2024 Arc Instant Escrow. Tüm hakları saklıdır.</p>
+              <p>© 2024 Arc Instant Escrow. All rights reserved.</p>
             </div>
           </div>
         </footer>

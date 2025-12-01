@@ -3,7 +3,7 @@ import '@/app/globals.css';
 
 export const metadata: Metadata = {
   title: 'Arc Instant Escrow',
-  description: 'Arc blockchain emanet yönetim sistemi',
+  description: 'Secure escrow management system on Arc blockchain',
 };
 
 export default function RootLayout({
@@ -12,7 +12,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="tr">
+    <html lang="en">
       <body className="bg-gray-50">{children}</body>
     </html>
   );
