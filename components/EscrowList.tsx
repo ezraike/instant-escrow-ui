@@ -104,11 +104,20 @@ export function EscrowList() {
 
   const getStatusLabel = (status: number): string => {
     const labels: Record<number, string> = {
-      [EscrowStatus.PENDING]: 'Pending',
+      [EscrowStatus.PENDING]: 'Awaiting Arbitration',
       [EscrowStatus.RELEASED]: 'Released',
       [EscrowStatus.REFUNDED]: 'Refunded',
     };
     return labels[status] || 'Unknown';
+  };
+
+  const getStatusDescription = (status: number): string => {
+    const descriptions: Record<number, string> = {
+      [EscrowStatus.PENDING]: '⚖️ Hakem onayı bekleniyor',
+      [EscrowStatus.RELEASED]: '✓ Para gönderildi',
+      [EscrowStatus.REFUNDED]: '↩️ İade edildi',
+    };
+    return descriptions[status] || '';
   };
 
   if (!isConnected) {
@@ -208,9 +217,14 @@ export function EscrowList() {
                     </td>
                     <td className="py-3 px-2 font-semibold">{parseFloat(escrow.amount).toFixed(2)} USDC</td>
                     <td className="py-3 px-2">
-                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(escrow.status)}`}>
-                        {getStatusLabel(escrow.status)}
-                      </span>
+                      <div>
+                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(escrow.status)}`}>
+                          {getStatusLabel(escrow.status)}
+                        </span>
+                        <div className="text-xs text-gray-500 mt-1">
+                          {getStatusDescription(escrow.status)}
+                        </div>
+                      </div>
                     </td>
                     <td className="py-3 px-2 text-xs">{formatDate(escrow.createdAt)}</td>
                     <td className="py-3 px-2 text-xs text-gray-600 truncate max-w-[150px]">

@@ -11,9 +11,9 @@ export const ARC_TESTNET_CONFIG = {
   },
 };
 
-// Contract Addresses (Update with your deployed address)
-export const CONTRACT_ADDRESS = '0xB3aC493E019Ed51794bC00B60c830aaEeF22814d'; // Deployed on Arc Testnet
-export const USDC_ADDRESS = '0x3600000000000000000000000000000000000000';
+// Contract Addresses (Deployed on Arc Testnet - Dec 1, 2024)
+export const CONTRACT_ADDRESS = '0x742d35Cc6634C0532925a3b844Bc9e7595f42e99'; // InstantEscrow
+export const USDC_ADDRESS = '0x3600000000000000000000000000000000000000'; // Arc USDC
 
 // InstantEscrow ABI
 export const INSTANT_ESCROW_ABI = [
