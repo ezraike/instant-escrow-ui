@@ -7,7 +7,6 @@ import {
   EscrowStatus,
   Settlement,
   SettlementStatus,
-  SettleDisputeInput,
 } from '@/lib/types';
 
 interface ArbitrationPanelProps {
@@ -67,7 +66,7 @@ export const ArbitrationPanel: React.FC<ArbitrationPanelProps> = ({
         const escrowContractAddress = process.env.NEXT_PUBLIC_ESCROW_CONTRACT || '';
         const escrowContract = new web3.eth.Contract(escrowABI as any, escrowContractAddress);
 
-        const escrowData = await escrowContract.methods.getEscrow(escrowId).call();
+        const escrowData = (await escrowContract.methods.getEscrow(escrowId).call()) as any;
 
         const amountFormatted = web3.utils.fromWei(escrowData.amount, 'mwei');
 
@@ -121,20 +120,25 @@ export const ArbitrationPanel: React.FC<ArbitrationPanelProps> = ({
         const arbitrationAddress = process.env.NEXT_PUBLIC_ARBITRATION_ORACLE || '';
         const arbitrationContract = new web3.eth.Contract(arbitrationABI as any, arbitrationAddress);
 
-        const settlementData = await arbitrationContract.methods.getSettlement(escrowId).call();
-        const isSettledValue = await arbitrationContract.methods.isSettled(escrowId).call();
+        try {
+          const settlementData = (await arbitrationContract.methods.getSettlement(escrowId).call()) as any;
+          const isSettledValue = (await arbitrationContract.methods.isSettled(escrowId).call()) as boolean;
 
-        setSettlement({
-          escrowId: Number(settlementData.escrowId),
-          arbitrator: settlementData.arbitrator,
-          status: settlementData.status,
-          timestamp: Number(settlementData.timestamp),
-          timestampFormatted: new Date(Number(settlementData.timestamp) * 1000).toLocaleString(),
-          reason: settlementData.reason,
-          meeTriggered: settlementData.meeTriggered,
-        });
+          setSettlement({
+            escrowId: Number(settlementData?.escrowId || 0),
+            arbitrator: settlementData?.arbitrator || '',
+            status: Number(settlementData?.status || 0),
+            timestamp: Number(settlementData?.timestamp || 0),
+            timestampFormatted: settlementData?.timestamp ? new Date(Number(settlementData.timestamp) * 1000).toLocaleString() : '',
+            reason: settlementData?.reason || '',
+            meeTriggered: settlementData?.meeTriggered || false,
+          });
 
-        setIsSettled(isSettledValue);
+          setIsSettled(Boolean(isSettledValue));
+        } catch (settlementErr: any) {
+          // Settlement data not found yet (first time)
+          console.log('Settlement not yet created:', settlementErr.message);
+        }
       } catch (err: any) {
         setError(err.message || 'Failed to load escrow details');
         console.error('Error loading escrow details:', err);

@@ -75,8 +75,13 @@ export function EscrowDetail({ escrowId, onClose, onUpdate }: EscrowDetailProps)
           },
         ];
         const arbitrationContract = new web3!.eth.Contract(arbitrationABI as any, arbitrationOracleAddress);
-        const isArbitrator = await arbitrationContract.methods.isAuthorizedArbitrator(account).call();
-        setIsAuthorizedArbitrator(isArbitrator);
+        try {
+          const isArbitrator = (await arbitrationContract.methods.isAuthorizedArbitrator(account).call()) as boolean;
+          setIsAuthorizedArbitrator(Boolean(isArbitrator));
+        } catch (arbitrationErr: any) {
+          console.log('Arbitrator check failed:', arbitrationErr.message);
+          setIsAuthorizedArbitrator(false);
+        }
       }
     } catch (err: any) {
       setError(err.message || 'Failed to load escrow details');

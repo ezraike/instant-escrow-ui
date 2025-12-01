@@ -47,7 +47,7 @@ export async function buildConditionalReleaseInstruction(
   escrowId: number,
   escrowContractAddress: string,
   arbitrationOracleAddress: string,
-  web3: Web3
+  _web3?: Web3  // Optional, not currently used
 ) {
   // SimpleEscrow releaseEscrow() ABI
   const releaseABI = [
@@ -119,13 +119,12 @@ export async function buildMEEConditionalReleasePayload(
   escrowContractAddress: string,
   arbitrationOracleAddress: string,
   userAccount: string,
-  web3: Web3
+  _web3?: Web3  // Optional, used for potential future extensions
 ) {
   const instruction = await buildConditionalReleaseInstruction(
     escrowId,
     escrowContractAddress,
-    arbitrationOracleAddress,
-    web3
+    arbitrationOracleAddress
   );
 
   // MEE Supertransaction Payload
@@ -250,8 +249,8 @@ export async function canReleaseWithArbitration(
   const contract = new web3.eth.Contract(ABI as any, escrowContractAddress);
 
   try {
-    const result = await contract.methods.canReleaseWithArbitration(escrowId).call();
-    return result;
+    const result = (await contract.methods.canReleaseWithArbitration(escrowId).call()) as boolean;
+    return Boolean(result);
   } catch (error) {
     console.error('Error checking release eligibility:', error);
     return false;
