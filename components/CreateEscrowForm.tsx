@@ -149,7 +149,7 @@ export function CreateEscrowForm() {
   if (!isConnected) {
     return (
       <div className="p-4 bg-blue-100 text-blue-800 rounded-lg">
-        Emanet oluşturmak için cüzdanı bağlayınız
+        Connect your wallet to create an escrow
       </div>
     );
   }

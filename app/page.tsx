@@ -85,11 +85,11 @@ export default function Home() {
               <div>
                 <h3 className="font-semibold mb-4">Arc Instant Escrow</h3>
                 <p className="text-gray-400 text-sm">
-                  Emanet (Escrow) yönetimi, Arc blockchain'in deterministic finality ve USDC gas token teknolojisini kullanarak güvenli, hızlı ve düşük maliyetli işlemler sunmaktadır.
+                  Escrow management using Arc blockchain's deterministic finality and USDC gas token technology to provide secure, fast, and low-cost transactions.
                 </p>
               </div>
               <div>
-                <h3 className="font-semibold mb-4">Kaynaklar</h3>
+                <h3 className="font-semibold mb-4">Resources</h3>
                 <ul className="text-gray-400 text-sm space-y-2">
                   <li>
                     <a 
