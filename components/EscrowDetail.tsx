@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useWeb3 } from '@/lib/web3-context';
+import { ArbitrationPanel } from './ArbitrationPanel';
 import { 
   CONTRACT_ADDRESS, 
   INSTANT_ESCROW_ABI, 
@@ -21,6 +22,8 @@ export function EscrowDetail({ escrowId, onClose, onUpdate }: EscrowDetailProps)
   const [escrow, setEscrow] = useState<any>(null);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [userRole, setUserRole] = useState<'payer' | 'payee' | 'none'>('none');
+  const [showArbitrationPanel, setShowArbitrationPanel] = useState(false);
+  const [isAuthorizedArbitrator, setIsAuthorizedArbitrator] = useState(false);
 
   useEffect(() => {
     if (isConnected && account && web3) {
@@ -58,6 +61,23 @@ export function EscrowDetail({ escrowId, onClose, onUpdate }: EscrowDetailProps)
 
       setTimeRemaining(parseInt(String(remaining)));
       setUserRole(role);
+
+      // Check if user is authorized arbitrator
+      const arbitrationOracleAddress = process.env.NEXT_PUBLIC_ARBITRATION_ORACLE || '';
+      if (arbitrationOracleAddress) {
+        const arbitrationABI = [
+          {
+            inputs: [{ internalType: 'address', name: '_arbitrator', type: 'address' }],
+            name: 'isAuthorizedArbitrator',
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+            stateMutability: 'view',
+            type: 'function',
+          },
+        ];
+        const arbitrationContract = new web3!.eth.Contract(arbitrationABI as any, arbitrationOracleAddress);
+        const isArbitrator = await arbitrationContract.methods.isAuthorizedArbitrator(account).call();
+        setIsAuthorizedArbitrator(isArbitrator);
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to load escrow details');
       console.error('Error:', err);
@@ -244,25 +264,56 @@ export function EscrowDetail({ escrowId, onClose, onUpdate }: EscrowDetailProps)
 
           {/* Actions */}
           {escrow.status === EscrowStatus.PENDING && (
-            <div className="flex gap-3 pt-4 border-t">
-              {(userRole === 'payer' || userRole === 'payee') && (
+            <div className="flex gap-3 pt-4 border-t flex-col">
+              <div className="flex gap-3">
+                {(userRole === 'payer' || userRole === 'payee') && (
+                  <button
+                    onClick={handleRelease}
+                    disabled={loading}
+                    className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50 font-semibold"
+                  >
+                    {loading ? 'Processing...' : 'Release'}
+                  </button>
+                )}
+                {userRole === 'payer' && timeRemaining <= 0 && (
+                  <button
+                    onClick={handleRefund}
+                    disabled={loading}
+                    className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition disabled:opacity-50 font-semibold"
+                  >
+                    {loading ? 'Processing...' : 'Refund'}
+                  </button>
+                )}
+              </div>
+
+              {/* Arbitration Panel Button */}
+              {isAuthorizedArbitrator && (
                 <button
-                  onClick={handleRelease}
-                  disabled={loading}
-                  className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50 font-semibold"
+                  onClick={() => setShowArbitrationPanel(!showArbitrationPanel)}
+                  className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-semibold"
                 >
-                  {loading ? 'Processing...' : 'Release'}
+                  {showArbitrationPanel ? '✕ Hide Arbitration' : '⚖️ Show Arbitration Panel'}
                 </button>
               )}
-              {userRole === 'payer' && timeRemaining <= 0 && (
-                <button
-                  onClick={handleRefund}
-                  disabled={loading}
-                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition disabled:opacity-50 font-semibold"
-                >
-                  {loading ? 'Processing...' : 'Refund'}
-                </button>
-              )}
+            </div>
+          )}
+
+          {/* Arbitration Panel */}
+          {isAuthorizedArbitrator && showArbitrationPanel && (
+            <div className="border-t pt-4 mt-4">
+              <ArbitrationPanel
+                escrowId={parseInt(escrowId)}
+                onSettled={() => {
+                  loadEscrowDetails();
+                  onUpdate();
+                  setShowArbitrationPanel(false);
+                }}
+                onDisputed={() => {
+                  loadEscrowDetails();
+                  onUpdate();
+                  setShowArbitrationPanel(false);
+                }}
+              />
             </div>
           )}
         </div>

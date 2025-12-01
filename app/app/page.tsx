@@ -3,6 +3,7 @@
 import { WalletButton } from '@/components/WalletButton';
 import { CreateEscrowForm } from '@/components/CreateEscrowForm';
 import { EscrowList } from '@/components/EscrowList';
+import { WorkflowDiagram } from '@/components/WorkflowDiagram';
 import Link from 'next/link';
 import { useWeb3 } from '@/lib/web3-context';
 import { useRouter } from 'next/navigation';
@@ -82,20 +83,23 @@ export default function AppPage() {
           </div>
         </div>
 
-        {/* Main Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Form */}
-          <div className="lg:col-span-1">
-            <CreateEscrowForm />
-          </div>
-
-          {/* Right Column - List */}
-          <div className="lg:col-span-2">
-            <EscrowList />
-          </div>
+      {/* Main Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Column - Form */}
+        <div className="lg:col-span-1">
+          <CreateEscrowForm />
         </div>
 
-        {/* Network Info */}
+        {/* Right Column - List */}
+        <div className="lg:col-span-2">
+          <EscrowList />
+        </div>
+      </div>
+
+      {/* Workflow Diagram Section */}
+      <div className="mt-12">
+        <WorkflowDiagram />
+      </div>        {/* Network Info */}
         <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-sm text-gray-700">
             <strong>Network:</strong> Arc Testnet (Chain ID: 27) | 
