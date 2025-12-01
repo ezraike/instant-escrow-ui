@@ -2,11 +2,12 @@ import { Web3Provider } from '@/lib/web3-context';
 import { WalletButton } from '@/components/WalletButton';
 import { CreateEscrowForm } from '@/components/CreateEscrowForm';
 import { EscrowList } from '@/components/EscrowList';
+import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Arc Instant Escrow - Secure Escrow Management',
-  description: 'Secure escrow management with deterministic finality on Arc Testnet',
+  title: 'ArcESC - Secure Escrow Management',
+  description: 'Instant payment and settlement with ArcESC on Arc Testnet',
 };
 
 export default function Home() {
@@ -18,13 +19,18 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex justify-between items-center">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                🔐 Arc Instant Escrow
+                🔐 ArcESC
               </h1>
               <p className="text-gray-600 text-sm mt-1">
-                Secure Escrow Management with Deterministic Finality
+                Instant Payment & Settlement
               </p>
             </div>
-            <WalletButton />
+            <div className="flex items-center gap-6">
+              <Link href="/about" className="text-gray-600 hover:text-gray-900 transition font-medium">
+                About
+              </Link>
+              <WalletButton />
+            </div>
           </div>
         </header>
 
@@ -34,23 +40,23 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="text-3xl mb-2">⚡</div>
-              <h3 className="font-semibold text-gray-900">Fast Transactions</h3>
+              <h3 className="font-semibold text-gray-900">Sub-Second Finality</h3>
               <p className="text-sm text-gray-600 mt-1">
-                Arc blockchain's sub-second deterministic finality technology
+                Instant transaction settlement with Arc's deterministic finality
               </p>
             </div>
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="text-3xl mb-2">💰</div>
-              <h3 className="font-semibold text-gray-900">Low Fees</h3>
+              <h3 className="font-semibold text-gray-900">Stable Fees</h3>
               <p className="text-sm text-gray-600 mt-1">
-                Pay transaction fees with USDC (~0.01 USD)
+                Predictable USDC-based gas fees (~$0.01 per transaction)
               </p>
             </div>
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="text-3xl mb-2">🔒</div>
-              <h3 className="font-semibold text-gray-900">Secure</h3>
+              <h3 className="font-semibold text-gray-900">Enterprise Security</h3>
               <p className="text-sm text-gray-600 mt-1">
-                Full control and accuracy with smart contracts
+                BFT consensus with permissioned validator accountability
               </p>
             </div>
           </div>
@@ -83,9 +89,9 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
-                <h3 className="font-semibold mb-4">Arc Instant Escrow</h3>
+                <h3 className="font-semibold mb-4">ArcESC</h3>
                 <p className="text-gray-400 text-sm">
-                  Escrow management using Arc blockchain's deterministic finality and USDC gas token technology to provide secure, fast, and low-cost transactions.
+                  Instant payment and settlement using Arc blockchain's deterministic finality and USDC gas token technology to provide secure, fast, and low-cost transactions.
                 </p>
               </div>
               <div>
@@ -137,7 +143,7 @@ export default function Home() {
                 </a>
               </p>
               <p className="mb-4">Powered by Arc Network</p>
-              <p className="border-t border-gray-600 pt-4">© 2024 Arc Instant Escrow. All rights reserved.</p>
+              <p className="border-t border-gray-600 pt-4">© 2024 ArcESC. All rights reserved.</p>
             </div>
           </div>
         </footer>

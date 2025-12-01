@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import '@/app/globals.css';
 
 export const metadata: Metadata = {
-  title: 'Arc Instant Escrow',
+  title: 'ArcESC - Instant Payment & Settlement',
   description: 'Secure escrow management system on Arc blockchain',
 };
 
