@@ -1,5 +1,10 @@
 # Arc Instant Escrow - Development Guide
 
+## 🔗 Chat History Reference
+**Important**: Save this link to remember the entire development process:
+- **Full Chat History**: This conversation contains all technical decisions, bug fixes, and development progress
+- When returning to development, reference this chat and the commits below for context
+
 ## Project Status (as of Dec 1, 2025)
 
 ### ✅ Completed
