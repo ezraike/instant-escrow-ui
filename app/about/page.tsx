@@ -17,8 +17,8 @@ export default function About() {
             </h1>
           </Link>
           <div className="flex gap-4">
-            <Link href="/" className="text-gray-600 hover:text-gray-900 transition">
-              Home
+            <Link href="/app" className="text-gray-600 hover:text-gray-900 transition">
+              Dashboard
             </Link>
             <Link href="/about" className="text-blue-600 font-semibold hover:text-blue-800 transition">
               About
@@ -206,10 +206,10 @@ export default function About() {
 
           <div className="mt-8">
             <Link
-              href="/"
+              href="/app"
               className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
             >
-              Get Started Now
+              Go to Dashboard
             </Link>
           </div>
         </section>

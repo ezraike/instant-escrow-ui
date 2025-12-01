@@ -1,153 +1,108 @@
-import { Web3Provider } from '@/lib/web3-context';
-import { WalletButton } from '@/components/WalletButton';
-import { CreateEscrowForm } from '@/components/CreateEscrowForm';
-import { EscrowList } from '@/components/EscrowList';
-import Link from 'next/link';
-import type { Metadata } from 'next';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'ArcESC - Secure Escrow Management',
-  description: 'Instant payment and settlement with ArcESC on Arc Testnet',
-};
+import { useWeb3 } from '@/lib/web3-context';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-export default function Home() {
+export default function Landing() {
+  const { isConnected } = useWeb3();
+  const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && isConnected) {
+      router.push('/app');
+    }
+  }, [isConnected, mounted, router]);
+
+  const handleMakeEscrow = async () => {
+    // Dispatch event to connect wallet
+    const event = new CustomEvent('connectWallet');
+    window.dispatchEvent(event);
+  };
+
   return (
-    <Web3Provider>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-        {/* Header */}
-        <header className="bg-white shadow">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                🔐 ArcESC
-              </h1>
-              <p className="text-gray-600 text-sm mt-1">
-                Instant Payment & Settlement
-              </p>
-            </div>
-            <div className="flex items-center gap-6">
-              <Link href="/about" className="text-gray-600 hover:text-gray-900 transition font-medium">
-                About
-              </Link>
-              <WalletButton />
-            </div>
-          </div>
-        </header>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 flex flex-col items-center justify-center relative">
+      {/* Navigation */}
+      <nav className="fixed top-0 right-0 p-6 z-10">
+        <a 
+          href="/about" 
+          className="text-gray-600 hover:text-gray-900 transition font-medium"
+        >
+          About
+        </a>
+      </nav>
 
-        {/* Main Content */}
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Info Section */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div className="bg-white p-4 rounded-lg shadow">
-              <div className="text-3xl mb-2">⚡</div>
-              <h3 className="font-semibold text-gray-900">Sub-Second Finality</h3>
-              <p className="text-sm text-gray-600 mt-1">
-                Instant transaction settlement with Arc's deterministic finality
-              </p>
-            </div>
-            <div className="bg-white p-4 rounded-lg shadow">
-              <div className="text-3xl mb-2">💰</div>
-              <h3 className="font-semibold text-gray-900">Stable Fees</h3>
-              <p className="text-sm text-gray-600 mt-1">
-                Predictable USDC-based gas fees (~$0.01 per transaction)
-              </p>
-            </div>
-            <div className="bg-white p-4 rounded-lg shadow">
-              <div className="text-3xl mb-2">🔒</div>
-              <h3 className="font-semibold text-gray-900">Enterprise Security</h3>
-              <p className="text-sm text-gray-600 mt-1">
-                BFT consensus with permissioned validator accountability
-              </p>
-            </div>
-          </div>
+      {/* Main Content */}
+      <div className="text-center px-4 sm:px-6 lg:px-8 max-w-3xl">
+        {/* Logo */}
+        <div className="mb-8 animate-bounce">
+          <h1 className="text-6xl sm:text-7xl font-bold">
+            🔐
+          </h1>
+        </div>
 
-          {/* Main Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Left Column - Form */}
-            <div className="lg:col-span-1">
-              <CreateEscrowForm />
-            </div>
+        {/* Main Heading */}
+        <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 mb-8 leading-tight">
+          Build partnerships,
+          <br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+            Keep your trust
+          </span>
+        </h2>
 
-            {/* Right Column - List */}
-            <div className="lg:col-span-2">
-              <EscrowList />
-            </div>
-          </div>
+        {/* Description */}
+        <p className="text-lg sm:text-xl text-gray-600 mb-12 leading-relaxed max-w-2xl mx-auto">
+          ArcESC, Instant payment and settlement using Arc blockchain's deterministic finality and USDC gas token technology to provide secure, fast, and low-cost transactions.
+        </p>
 
-          {/* Network Info */}
-          <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <p className="text-sm text-gray-700">
-              <strong>Network:</strong> Arc Testnet (Chain ID: 27) | 
-              <strong className="ml-4">USDC:</strong> 0x360...000 | 
-              <strong className="ml-4">Gas Token:</strong> USDC
-            </p>
+        {/* CTA Button */}
+        <button
+          onClick={handleMakeEscrow}
+          className="inline-block px-12 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
+        >
+          Make Escrow
+        </button>
+
+        {/* Features at bottom */}
+        <div className="mt-20 grid grid-cols-1 sm:grid-cols-3 gap-8 pt-16 border-t border-gray-300">
+          <div className="text-center">
+            <div className="text-5xl mb-4">⚡</div>
+            <h3 className="font-bold text-gray-900 mb-2 text-lg">Sub-Second</h3>
+            <p className="text-sm text-gray-600">Instant settlement with deterministic finality</p>
           </div>
-        </main>
+          <div className="text-center">
+            <div className="text-5xl mb-4">💰</div>
+            <h3 className="font-bold text-gray-900 mb-2 text-lg">Stable Fees</h3>
+            <p className="text-sm text-gray-600">Predictable USDC-based gas (~$0.01)</p>
+          </div>
+          <div className="text-center">
+            <div className="text-5xl mb-4">🔒</div>
+            <h3 className="font-bold text-gray-900 mb-2 text-lg">Secure</h3>
+            <p className="text-sm text-gray-600">Enterprise-grade BFT consensus</p>
+          </div>
+        </div>
 
         {/* Footer */}
-        <footer className="bg-gray-800 text-white mt-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="font-semibold mb-4">ArcESC</h3>
-                <p className="text-gray-400 text-sm">
-                  Instant payment and settlement using Arc blockchain's deterministic finality and USDC gas token technology to provide secure, fast, and low-cost transactions.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-4">Resources</h3>
-                <ul className="text-gray-400 text-sm space-y-2">
-                  <li>
-                    <a 
-                      href="https://testnet.arcscan.app" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="hover:text-white transition"
-                    >
-                      Arc Scan (Block Explorer)
-                    </a>
-                  </li>
-                  <li>
-                    <a 
-                      href="https://testnet.arc.network" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="hover:text-white transition"
-                    >
-                      Arc Testnet
-                    </a>
-                  </li>
-                  <li>
-                    <a 
-                      href="https://remix.ethereum.org" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="hover:text-white transition"
-                    >
-                      Remix IDE
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-sm">
-              <p className="mb-2">
-                Built with ❤️ by{' '}
-                <a
-                  href="https://x.com/ezraike"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-400 hover:text-blue-300 transition font-semibold"
-                >
-                  ezraike
-                </a>
-              </p>
-              <p className="mb-4">Powered by Arc Network</p>
-              <p className="border-t border-gray-600 pt-4">© 2024 ArcESC. All rights reserved.</p>
-            </div>
-          </div>
-        </footer>
+        <div className="mt-20 text-center text-gray-500 text-sm">
+          <p>
+            Built with ❤️ by{' '}
+            <a
+              href="https://x.com/ezraike"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-700 font-semibold"
+            >
+              ezraike
+            </a>
+          </p>
+          <p className="mt-2">Powered by Arc Network</p>
+        </div>
       </div>
-    </Web3Provider>
+    </div>
   );
 }

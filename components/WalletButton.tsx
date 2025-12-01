@@ -1,9 +1,19 @@
 'use client';
 
 import { useWeb3 } from '@/lib/web3-context';
+import { useEffect } from 'react';
 
 export function WalletButton() {
   const { account, isConnected, isConnecting, connectWallet, disconnectWallet, error } = useWeb3();
+
+  useEffect(() => {
+    const handleConnectWallet = () => {
+      connectWallet();
+    };
+
+    window.addEventListener('connectWallet', handleConnectWallet);
+    return () => window.removeEventListener('connectWallet', handleConnectWallet);
+  }, [connectWallet]);
 
   return (
     <div className="space-y-2">
