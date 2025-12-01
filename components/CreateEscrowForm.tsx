@@ -25,7 +25,7 @@ export function CreateEscrowForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!web3 || !account || !isConnected) {
-      setError('Cüzdan bağlı değil');
+      setError('Wallet not connected');
       return;
     }
 
@@ -36,11 +36,11 @@ export function CreateEscrowForm() {
     try {
       // Validate inputs
       if (!formData.payee || !formData.amount || !formData.description) {
-        throw new Error('Lütfen tüm alanları doldurunuz');
+        throw new Error('Please fill in all fields');
       }
 
       if (!web3.utils.isAddress(formData.payee)) {
-        throw new Error('Geçersiz alıcı adresi');
+        throw new Error('Invalid recipient address');
       }
 
       // Convert amount to Wei (USDC has 6 decimals, not 18)
@@ -48,7 +48,7 @@ export function CreateEscrowForm() {
       const lockTimeSeconds = parseInt(formData.lockTime);
 
       if (lockTimeSeconds < 3600 || lockTimeSeconds > 31536000) {
-        throw new Error('Kilit süresi 1 saat ile 365 gün arasında olmalıdır');
+        throw new Error('Lock time must be between 1 hour and 365 days');
       }
 
       // First, check current USDC balance
@@ -63,11 +63,11 @@ export function CreateEscrowForm() {
         console.log('USDC Balance:', balanceAmount);
         
         if (BigInt(balanceStr) < BigInt(amountWei)) {
-          throw new Error(`Yetersiz USDC bakiyesi. Bakiye: ${balanceAmount}, Gerekli: ${formData.amount}`);
+          throw new Error(`Insufficient USDC balance. Balance: ${balanceAmount}, Required: ${formData.amount}`);
         }
       } catch (balanceErr: any) {
         console.error('Balance check error:', balanceErr);
-        throw new Error(`USDC bakiye kontrol başarısız: ${balanceErr.message}`);
+        throw new Error(`USDC balance check failed: ${balanceErr.message}`);
       }
 
       // Approve USDC with a very high amount (infinite approval)
@@ -94,7 +94,7 @@ export function CreateEscrowForm() {
         }
       } catch (approveErr: any) {
         console.error('Approval error:', approveErr);
-        throw new Error(`USDC onayı başarısız: ${approveErr.message || String(approveErr)}`);
+        throw new Error(`USDC approval failed: ${approveErr.message || String(approveErr)}`);
       }
 
       // Delay to ensure approval is confirmed
@@ -131,7 +131,7 @@ export function CreateEscrowForm() {
         setSuccess(true);
       } catch (createErr: any) {
         console.error('Create escrow error:', createErr);
-        throw new Error(`Emanet oluşturma başarısız: ${createErr.message || String(createErr)}`);
+        throw new Error(`Escrow creation failed: ${createErr.message || String(createErr)}`);
       }
 
       setFormData({ payee: '', amount: '', lockTime: '86400', description: '' });
@@ -156,7 +156,7 @@ export function CreateEscrowForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-lg shadow">
-      <h2 className="text-2xl font-bold mb-4">Yeni Emanet Oluştur</h2>
+      <h2 className="text-2xl font-bold mb-4">Create New Escrow</h2>
 
       {error && (
         <div className="p-3 bg-red-100 text-red-800 rounded-lg text-sm">
@@ -166,12 +166,12 @@ export function CreateEscrowForm() {
 
       {success && (
         <div className="p-3 bg-green-100 text-green-800 rounded-lg text-sm">
-          ✓ Emanet başarıyla oluşturuldu!
+          ✓ Escrow created successfully!
         </div>
       )}
 
       <div>
-        <label className="block text-sm font-semibold mb-1">Alıcı Adresi *</label>
+        <label className="block text-sm font-semibold mb-1">Recipient Address *</label>
         <input
           type="text"
           name="payee"
@@ -184,7 +184,7 @@ export function CreateEscrowForm() {
       </div>
 
       <div>
-        <label className="block text-sm font-semibold mb-1">USDC Miktarı *</label>
+        <label className="block text-sm font-semibold mb-1">USDC Amount *</label>
         <input
           type="number"
           name="amount"
@@ -199,28 +199,28 @@ export function CreateEscrowForm() {
       </div>
 
       <div>
-        <label className="block text-sm font-semibold mb-1">Kilit Süresi (Saniye) *</label>
+        <label className="block text-sm font-semibold mb-1">Lock Duration (Seconds) *</label>
         <select
           name="lockTime"
           value={formData.lockTime}
           onChange={(e) => setFormData(prev => ({ ...prev, lockTime: e.target.value }))}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <option value="3600">1 Saat</option>
-          <option value="86400">1 Gün</option>
-          <option value="604800">1 Hafta</option>
-          <option value="2592000">30 Gün</option>
-          <option value="31536000">1 Yıl</option>
+          <option value="3600">1 Hour</option>
+          <option value="86400">1 Day</option>
+          <option value="604800">1 Week</option>
+          <option value="2592000">30 Days</option>
+          <option value="31536000">1 Year</option>
         </select>
       </div>
 
       <div>
-        <label className="block text-sm font-semibold mb-1">Açıklama *</label>
+        <label className="block text-sm font-semibold mb-1">Description *</label>
         <textarea
           name="description"
           value={formData.description}
           onChange={handleInputChange}
-          placeholder="Emanet hakkında açıklama yazınız..."
+          placeholder="Enter description about the escrow..."
           rows={3}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
@@ -232,7 +232,7 @@ export function CreateEscrowForm() {
         disabled={loading}
         className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 font-semibold"
       >
-        {loading ? 'İşlem Yapılıyor...' : 'Emanet Oluştur'}
+        {loading ? 'Processing...' : 'Create Escrow'}
       </button>
     </form>
   );

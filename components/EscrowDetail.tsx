@@ -49,7 +49,7 @@ export function EscrowDetail({ escrowId, onClose, onUpdate }: EscrowDetailProps)
       setEscrow({
         payer,
         payee,
-        amount: web3!.utils.fromWei(String(escrowData[2]), 'ether'),
+        amount: web3!.utils.fromWei(String(escrowData[2]), 'mwei'),
         status: parseInt(String(status)),
         createdAt: parseInt(String(escrowData[3])),
         lockTime: parseInt(String(escrowData[4])),
@@ -59,7 +59,7 @@ export function EscrowDetail({ escrowId, onClose, onUpdate }: EscrowDetailProps)
       setTimeRemaining(parseInt(String(remaining)));
       setUserRole(role);
     } catch (err: any) {
-      setError(err.message || 'Emanet detayları yüklenemedi');
+      setError(err.message || 'Failed to load escrow details');
       console.error('Error:', err);
     }
   };
@@ -83,7 +83,7 @@ export function EscrowDetail({ escrowId, onClose, onUpdate }: EscrowDetailProps)
       await loadEscrowDetails();
       onUpdate();
     } catch (err: any) {
-      setError(err.message || 'Emanet serbest bırakılamadı');
+      setError(err.message || 'Failed to release escrow');
     } finally {
       setLoading(false);
     }
@@ -108,7 +108,7 @@ export function EscrowDetail({ escrowId, onClose, onUpdate }: EscrowDetailProps)
       await loadEscrowDetails();
       onUpdate();
     } catch (err: any) {
-      setError(err.message || 'Emanet iade edilemedi');
+      setError(err.message || 'Failed to refund escrow');
     } finally {
       setLoading(false);
     }
@@ -119,7 +119,7 @@ export function EscrowDetail({ escrowId, onClose, onUpdate }: EscrowDetailProps)
   };
 
   const formatDate = (timestamp: number) => {
-    return new Date(timestamp * 1000).toLocaleDateString('tr-TR', {
+    return new Date(timestamp * 1000).toLocaleDateString('en-US', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
@@ -129,30 +129,30 @@ export function EscrowDetail({ escrowId, onClose, onUpdate }: EscrowDetailProps)
   };
 
   const formatDuration = (seconds: number) => {
-    if (seconds <= 0) return 'Geçmiş';
+    if (seconds <= 0) return 'Expired';
     const days = Math.floor(seconds / 86400);
     const hours = Math.floor((seconds % 86400) / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     
-    if (days > 0) return `${days} gün ${hours} saat`;
-    if (hours > 0) return `${hours} saat ${mins} dk`;
-    return `${mins} dakika`;
+    if (days > 0) return `${days}d ${hours}h`;
+    if (hours > 0) return `${hours}h ${mins}m`;
+    return `${mins}m`;
   };
 
   const getStatusLabel = (status: number): string => {
     const labels: Record<number, string> = {
-      [EscrowStatus.PENDING]: 'Beklemede',
-      [EscrowStatus.RELEASED]: 'Serbest Bırakıldı',
-      [EscrowStatus.REFUNDED]: 'İade Edildi',
+      [EscrowStatus.PENDING]: 'Pending',
+      [EscrowStatus.RELEASED]: 'Released',
+      [EscrowStatus.REFUNDED]: 'Refunded',
     };
-    return labels[status] || 'Bilinmiyor';
+    return labels[status] || 'Unknown';
   };
 
   if (!escrow) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div className="bg-white rounded-lg p-6 max-w-md w-full">
-          <p className="text-center text-gray-600">Yükleniyor...</p>
+          <p className="text-center text-gray-600">Loading...</p>
         </div>
       </div>
     );
@@ -162,7 +162,7 @@ export function EscrowDetail({ escrowId, onClose, onUpdate }: EscrowDetailProps)
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-start mb-6">
-          <h3 className="text-2xl font-bold">Emanet #{escrowId}</h3>
+          <h3 className="text-2xl font-bold">Escrow #{escrowId}</h3>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 text-2xl"
@@ -180,7 +180,7 @@ export function EscrowDetail({ escrowId, onClose, onUpdate }: EscrowDetailProps)
         <div className="space-y-4">
           {/* Status */}
           <div className="bg-gray-50 p-4 rounded-lg">
-            <label className="text-sm font-semibold text-gray-700">Durum</label>
+            <label className="text-sm font-semibold text-gray-700">Status</label>
             <div className="mt-2">
               <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
                 escrow.status === EscrowStatus.PENDING ? 'bg-yellow-100 text-yellow-800' :
@@ -194,7 +194,7 @@ export function EscrowDetail({ escrowId, onClose, onUpdate }: EscrowDetailProps)
 
           {/* Amount */}
           <div className="bg-gray-50 p-4 rounded-lg">
-            <label className="text-sm font-semibold text-gray-700">Emanet Miktarı</label>
+            <label className="text-sm font-semibold text-gray-700">Escrow Amount</label>
             <p className="mt-1 text-2xl font-bold text-blue-600">
               {parseFloat(escrow.amount).toFixed(2)} USDC
             </p>
@@ -203,25 +203,25 @@ export function EscrowDetail({ escrowId, onClose, onUpdate }: EscrowDetailProps)
           {/* Parties */}
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-gray-50 p-4 rounded-lg">
-              <label className="text-sm font-semibold text-gray-700">Gönderici</label>
+              <label className="text-sm font-semibold text-gray-700">Sender</label>
               <p className="mt-1 font-mono text-sm">{formatAddress(escrow.payer)}</p>
-              {userRole === 'payer' && <p className="text-xs text-blue-600 mt-1">↳ Sen</p>}
+              {userRole === 'payer' && <p className="text-xs text-blue-600 mt-1">↳ You</p>}
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
-              <label className="text-sm font-semibold text-gray-700">Alıcı</label>
+              <label className="text-sm font-semibold text-gray-700">Recipient</label>
               <p className="mt-1 font-mono text-sm">{formatAddress(escrow.payee)}</p>
-              {userRole === 'payee' && <p className="text-xs text-blue-600 mt-1">↳ Sen</p>}
+              {userRole === 'payee' && <p className="text-xs text-blue-600 mt-1">↳ You</p>}
             </div>
           </div>
 
           {/* Dates */}
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-gray-50 p-4 rounded-lg">
-              <label className="text-sm font-semibold text-gray-700">Oluşturma Tarihi</label>
+              <label className="text-sm font-semibold text-gray-700">Created Date</label>
               <p className="mt-1 text-sm">{formatDate(escrow.createdAt)}</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
-              <label className="text-sm font-semibold text-gray-700">Kilit Süresi</label>
+              <label className="text-sm font-semibold text-gray-700">Lock Duration</label>
               <p className="mt-1 text-sm">{formatDuration(escrow.lockTime)}</p>
             </div>
           </div>
@@ -229,16 +229,16 @@ export function EscrowDetail({ escrowId, onClose, onUpdate }: EscrowDetailProps)
           {/* Time Remaining */}
           {escrow.status === EscrowStatus.PENDING && (
             <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
-              <label className="text-sm font-semibold text-gray-700">İade Süresi Kalan</label>
+              <label className="text-sm font-semibold text-gray-700">Time Until Refund</label>
               <p className="mt-1 text-lg font-bold text-blue-600">
-                {timeRemaining > 0 ? formatDuration(timeRemaining) : 'İade zamanı geldi'}
+                {timeRemaining > 0 ? formatDuration(timeRemaining) : 'Refund available'}
               </p>
             </div>
           )}
 
           {/* Description */}
           <div className="bg-gray-50 p-4 rounded-lg">
-            <label className="text-sm font-semibold text-gray-700">Açıklama</label>
+            <label className="text-sm font-semibold text-gray-700">Description</label>
             <p className="mt-1 text-sm text-gray-700">{escrow.description}</p>
           </div>
 
@@ -251,7 +251,7 @@ export function EscrowDetail({ escrowId, onClose, onUpdate }: EscrowDetailProps)
                   disabled={loading}
                   className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50 font-semibold"
                 >
-                  {loading ? 'İşlem Yapılıyor...' : 'Serbest Bırak'}
+                  {loading ? 'Processing...' : 'Release'}
                 </button>
               )}
               {userRole === 'payer' && timeRemaining <= 0 && (
@@ -260,7 +260,7 @@ export function EscrowDetail({ escrowId, onClose, onUpdate }: EscrowDetailProps)
                   disabled={loading}
                   className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition disabled:opacity-50 font-semibold"
                 >
-                  {loading ? 'İşlem Yapılıyor...' : 'İade Et'}
+                  {loading ? 'Processing...' : 'Refund'}
                 </button>
               )}
             </div>

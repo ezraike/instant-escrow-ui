@@ -56,7 +56,7 @@ export function EscrowList() {
             id: i.toString(),
             payer: String(escrowData[0]).toLowerCase(),
             payee: String(escrowData[1]).toLowerCase(),
-            amount: web3!.utils.fromWei(String(escrowData[2]), 'ether'),
+            amount: web3!.utils.fromWei(String(escrowData[2]), 'mwei'),
             status: parseInt(String(status)),
             createdAt: parseInt(String(escrowData[3])),
             lockTime: parseInt(String(escrowData[4])),
@@ -78,7 +78,7 @@ export function EscrowList() {
 
       setEscrows(filtered.reverse()); // Show newest first
     } catch (err: any) {
-      setError(err.message || 'Emanetler yüklenemedi');
+      setError(err.message || 'Failed to load escrows');
       console.error('Error loading escrows:', err);
     } finally {
       setLoading(false);
@@ -104,17 +104,17 @@ export function EscrowList() {
 
   const getStatusLabel = (status: number): string => {
     const labels: Record<number, string> = {
-      [EscrowStatus.PENDING]: 'Beklemede',
-      [EscrowStatus.RELEASED]: 'Serbest Bırakıldı',
-      [EscrowStatus.REFUNDED]: 'İade Edildi',
+      [EscrowStatus.PENDING]: 'Pending',
+      [EscrowStatus.RELEASED]: 'Released',
+      [EscrowStatus.REFUNDED]: 'Refunded',
     };
-    return labels[status] || 'Bilinmiyor';
+    return labels[status] || 'Unknown';
   };
 
   if (!isConnected) {
     return (
       <div className="p-4 bg-blue-100 text-blue-800 rounded-lg">
-        Emanetleri görmek için cüzdanı bağlayınız
+        Connect your wallet to view escrows
       </div>
     );
   }
@@ -123,13 +123,13 @@ export function EscrowList() {
     <>
       <div className="bg-white p-6 rounded-lg shadow">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Emanetlerim</h2>
+          <h2 className="text-2xl font-bold">My Escrows</h2>
           <button
             onClick={loadEscrows}
             disabled={loading}
             className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition disabled:opacity-50"
           >
-            {loading ? 'Yükleniyor...' : 'Yenile'}
+            {loading ? 'Loading...' : 'Refresh'}
           </button>
         </div>
 
@@ -148,7 +148,7 @@ export function EscrowList() {
                 : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
             }`}
           >
-            Tümü
+            All
           </button>
           <button
             onClick={() => setFilter('payer')}
@@ -158,7 +158,7 @@ export function EscrowList() {
                 : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
             }`}
           >
-            Gönderdiklerim
+            Sent
           </button>
           <button
             onClick={() => setFilter('payee')}
@@ -168,17 +168,17 @@ export function EscrowList() {
                 : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
             }`}
           >
-            Aldıklarım
+            Received
           </button>
         </div>
 
         {loading ? (
           <div className="text-center py-8">
-            <p className="text-gray-600">Emanetler yükleniyor...</p>
+            <p className="text-gray-600">Loading escrows...</p>
           </div>
         ) : escrows.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-gray-600">Emanet bulunmamaktadır</p>
+            <p className="text-gray-600">No escrows found</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -186,11 +186,11 @@ export function EscrowList() {
               <thead>
                 <tr className="border-b border-gray-300">
                   <th className="text-left py-2 px-2">ID</th>
-                  <th className="text-left py-2 px-2">Diğer Taraf</th>
-                  <th className="text-left py-2 px-2">Miktar</th>
-                  <th className="text-left py-2 px-2">Durum</th>
-                  <th className="text-left py-2 px-2">Oluşturma Tarihi</th>
-                  <th className="text-left py-2 px-2">Açıklama</th>
+                  <th className="text-left py-2 px-2">Counterparty</th>
+                  <th className="text-left py-2 px-2">Amount</th>
+                  <th className="text-left py-2 px-2">Status</th>
+                  <th className="text-left py-2 px-2">Created</th>
+                  <th className="text-left py-2 px-2">Description</th>
                 </tr>
               </thead>
               <tbody>

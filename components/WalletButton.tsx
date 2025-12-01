@@ -15,7 +15,7 @@ export function WalletButton() {
       {isConnected ? (
         <div className="space-y-2">
           <div className="p-3 bg-green-100 text-green-800 rounded-lg">
-            <p className="font-semibold">Bağlandı ✓</p>
+            <p className="font-semibold">Connected ✓</p>
             <p className="text-sm font-mono">
               {account?.slice(0, 6)}...{account?.slice(-4)}
             </p>
@@ -24,7 +24,7 @@ export function WalletButton() {
             onClick={disconnectWallet}
             className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
           >
-            Çıkış Yap
+            Disconnect
           </button>
         </div>
       ) : (
@@ -33,7 +33,7 @@ export function WalletButton() {
           disabled={isConnecting}
           className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
         >
-          {isConnecting ? 'Bağlanıyor...' : 'MetaMask Bağla'}
+          {isConnecting ? 'Connecting...' : 'Connect MetaMask'}
         </button>
       )}
     </div>
