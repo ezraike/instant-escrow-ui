@@ -125,7 +125,19 @@ export default function Home() {
               </div>
             </div>
             <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-sm">
-              <p>© 2024 Arc Instant Escrow. All rights reserved.</p>
+              <p className="mb-2">
+                Built with ❤️ by{' '}
+                <a
+                  href="https://x.com/ezraike"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-400 hover:text-blue-300 transition font-semibold"
+                >
+                  ezraike
+                </a>
+              </p>
+              <p className="mb-4">Powered by Arc Network</p>
+              <p className="border-t border-gray-600 pt-4">© 2024 Arc Instant Escrow. All rights reserved.</p>
             </div>
           </div>
         </footer>
