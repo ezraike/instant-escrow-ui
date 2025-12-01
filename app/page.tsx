@@ -1,6 +1,7 @@
 'use client';
 
 import { useWeb3 } from '@/lib/web3-context';
+import { WalletButton } from '@/components/WalletButton';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -19,11 +20,9 @@ export default function Landing() {
     }
   }, [isConnected, mounted, router]);
 
-  const handleMakeEscrow = async () => {
-    // Dispatch event to connect wallet
-    const event = new CustomEvent('connectWallet');
-    window.dispatchEvent(event);
-  };
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 flex flex-col items-center justify-center relative">
@@ -60,13 +59,10 @@ export default function Landing() {
           ArcESC, Instant payment and settlement using Arc blockchain's deterministic finality and USDC gas token technology to provide secure, fast, and low-cost transactions.
         </p>
 
-        {/* CTA Button */}
-        <button
-          onClick={handleMakeEscrow}
-          className="inline-block px-12 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
-        >
-          Make Escrow
-        </button>
+        {/* Wallet Button - Main CTA */}
+        <div className="mb-8 max-w-sm mx-auto">
+          <WalletButton />
+        </div>
 
         {/* Features at bottom */}
         <div className="mt-20 grid grid-cols-1 sm:grid-cols-3 gap-8 pt-16 border-t border-gray-300">
