@@ -58,7 +58,8 @@ export function CreateEscrowForm() {
       try {
         const balance = await usdcContract.methods.balanceOf(account).call();
         const balanceStr = String(balance);
-        const balanceAmount = web3.utils.fromWei(balanceStr, 'ether');
+        // USDC has 6 decimals
+        const balanceAmount = web3.utils.fromWei(balanceStr, 'mwei');
         console.log('USDC Balance:', balanceAmount);
         
         if (BigInt(balanceStr) < BigInt(amountWei)) {
