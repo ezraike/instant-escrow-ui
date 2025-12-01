@@ -43,8 +43,8 @@ export function CreateEscrowForm() {
         throw new Error('Geçersiz alıcı adresi');
       }
 
-      // Convert amount to Wei
-      const amountWei = web3.utils.toWei(formData.amount, 'ether');
+      // Convert amount to Wei (USDC has 6 decimals, not 18)
+      const amountWei = web3.utils.toWei(formData.amount, 'mwei');
       const lockTimeSeconds = parseInt(formData.lockTime);
 
       if (lockTimeSeconds < 3600 || lockTimeSeconds > 31536000) {
