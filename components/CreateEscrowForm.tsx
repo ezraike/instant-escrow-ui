@@ -84,6 +84,14 @@ export function CreateEscrowForm() {
         });
 
         console.log('USDC approved:', approveTxResult);
+        
+        // Verify approval was successful
+        const allowance = await usdcContract.methods.allowance(account, CONTRACT_ADDRESS).call();
+        console.log('Verified allowance:', allowance);
+        
+        if (BigInt(String(allowance)) < BigInt(amountWei)) {
+          throw new Error('Approval verification failed - allowance insufficient');
+        }
       } catch (approveErr: any) {
         console.error('Approval error:', approveErr);
         throw new Error(`USDC onayı başarısız: ${approveErr.message || String(approveErr)}`);
