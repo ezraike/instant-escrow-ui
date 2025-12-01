@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useWeb3 } from '@/lib/web3-context';
 import { CONTRACT_ADDRESS, INSTANT_ESCROW_ABI, USDC_ADDRESS, USDC_ABI } from '@/lib/contract';
 
